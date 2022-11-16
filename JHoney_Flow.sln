@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29728.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JHoney_Flow", "JHoney_Flow.csproj", "{BE88E273-DBE9-4216-864B-80234DF8B0D5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BE88E273-DBE9-4216-864B-80234DF8B0D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE88E273-DBE9-4216-864B-80234DF8B0D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE88E273-DBE9-4216-864B-80234DF8B0D5}.Debug|x64.ActiveCfg = Debug|x64
+		{BE88E273-DBE9-4216-864B-80234DF8B0D5}.Debug|x64.Build.0 = Debug|x64
+		{BE88E273-DBE9-4216-864B-80234DF8B0D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE88E273-DBE9-4216-864B-80234DF8B0D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE88E273-DBE9-4216-864B-80234DF8B0D5}.Release|x64.ActiveCfg = Release|x64
+		{BE88E273-DBE9-4216-864B-80234DF8B0D5}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B7544C66-A200-4646-A986-DDF6CF38CDA9}
+	EndGlobalSection
+EndGlobal

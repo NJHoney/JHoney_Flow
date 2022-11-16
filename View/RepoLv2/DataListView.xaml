@@ -1,0 +1,286 @@
+﻿<UserControl x:Name="userControl" x:Class="JHoney_Flow.View.RepoLv2.DataListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:JHoney_Flow.View.RepoLv2"
+             xmlns:Controls = "http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:cmd="http://www.codeplex.com/prism"
+             xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+             Dialog:DialogParticipation.Register="{Binding }"
+             xmlns:CustomDialog="clr-namespace:JHoney_Flow.View.RepoLv2.RatioSetDialog"
+             IsEnabled="{Binding IsEnabled}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             >
+    <Grid x:Name="TopGrid">
+        
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Panel.ZIndex="1">
+            <CustomDialog:RatioSetDialogView DataContext="{Binding RatioSetDialogViewModel}"/>
+        </Grid>
+        <Grid IsEnabled="{Binding IsEnabledMainGrid}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+            <Grid.Resources>
+                <Style x:Key="AccentCircleButtonStyle" BasedOn="{StaticResource MahApps.Metro.Styles.MetroCircleButtonStyle}" TargetType="{x:Type ButtonBase}">
+                    <Setter Property="Foreground" Value="{DynamicResource AccentColorBrush}" />
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{DynamicResource GrayBrush7}" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Resources>
+
+            <Grid Grid.Row="0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Width="50" Height="50" Margin="0,0,10,0" Style="{StaticResource AccentCircleButtonStyle}" Command="{Binding CommandAddPathList}" ToolTip="대상폴더 목록을 하나 추가합니다" >
+                        <iconPacks:PackIconMaterialLight Width="35" Height="35" Kind="FolderPlus" />
+                    </Button>
+                    <Button Width="50" Height="50" Margin="0,0,10,0" Style="{StaticResource AccentCircleButtonStyle}" Command="{Binding CommandAddGroupPathList}" ToolTip="지정 폴더 내 다수의 폴더를 목록에 추가합니다" >
+                        <iconPacks:PackIconMaterialLight Width="35" Height="35" Kind="FolderMultiple" />
+                    </Button>
+                    <Button Width="50" Height="50" Margin="0,0,10,0" Style="{StaticResource AccentCircleButtonStyle}" Command="{Binding CommandRemoveGroupPathList}" ToolTip="등록된 폴더 목록을 모두 지웁니다" >
+                        <iconPacks:PackIconMaterial Width="35" Height="35" Kind="PlaylistRemove" />
+                    </Button>
+                </StackPanel>
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <DataGrid x:Name="Datagrid_PathList" ItemsSource="{Binding DataListModel}"  AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="True" IsReadOnly="True" AllowDrop="True" >
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Loaded">
+                            <cmd:InvokeCommandAction Command="{Binding LoadedEvent}" CommandParameter="{Binding ElementName=Datagrid_PathList, Mode=OneWay}" />
+                        </i:EventTrigger>
+                        <!--<i:EventTrigger EventName="Drop">
+                            <cmd:InvokeCommandAction Command="{Binding }" />
+                        </i:EventTrigger>-->
+                    </i:Interaction.Triggers>
+                    <DataGrid.Columns>
+                        <!--체크박스(하위폴더)-->
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.HeaderTemplate>
+                                <DataTemplate >
+                                    <CheckBox Content="" >
+                                        <!--<i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="Checked">
+                                                <cmd:InvokeCommandAction Command="{Binding DataContext.CommandCheckedChange, ElementName=Datagrid_PathList}" CommandParameter="{Binding }" />
+                                            </i:EventTrigger>
+                                            <i:EventTrigger EventName="Unchecked">
+                                                <cmd:InvokeCommandAction Command="{Binding DataContext.CommandCheckedChange, ElementName=Datagrid_PathList}" CommandParameter="{Binding }" />
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>-->
+                                    </CheckBox>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.HeaderTemplate>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox Content="" IsChecked="{Binding IsFindSubFolder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="Checked">
+                                                <cmd:InvokeCommandAction Command="{Binding DataContext.CommandSingleCheckedChange, ElementName=Datagrid_PathList}" CommandParameter="{Binding }" />
+                                            </i:EventTrigger>
+                                            <i:EventTrigger EventName="Unchecked">
+                                                <cmd:InvokeCommandAction Command="{Binding DataContext.CommandSingleCheckedChange, ElementName=Datagrid_PathList}" CommandParameter="{Binding }" />
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </CheckBox>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        
+                        <!--클래스이름-->
+                        <DataGridTemplateColumn Header="{Binding DataColumn_DataPath}" >
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding PathString.FolderPath_ClassFolderName, UpdateSourceTrigger=PropertyChanged}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!--경로-->
+                        <DataGridTemplateColumn Header="{Binding DataColumn_DataPath}"  >
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding PathString.FolderPath_Full}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!--경로설정-->
+                        <DataGridTemplateColumn Header="{Binding DataColumn_DataPathSet}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Command="{Binding DataContext.CommandSetPathButton, ElementName=Datagrid_PathList}" CommandParameter="{Binding }" Content="Open" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!--총 이미지 수-->
+                        <DataGridTextColumn Header="{Binding DataColumn_TotalImageCount}" Binding="{Binding ImagePathList.Count}" />
+
+                        <!--학습-->
+                        <DataGridTemplateColumn Header="{Binding DataColumn_Train}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="auto" />
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Text="{Binding TrainPercent, StringFormat={}{0:F1} %}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        <TextBox Grid.Column="0" Grid.Row="1" IsReadOnly="True" Text="{Binding TrainImageCount}" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        <Controls:NumericUpDown Grid.Column="1" Grid.Row="1" Value="{Binding TrainRatio, UpdateSourceTrigger=PropertyChanged}" Interval="0.1" StringFormat="F1" Minimum="0" >
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="ValueChanged">
+                                                    <cmd:InvokeCommandAction Command="{Binding DataContext.CommandRatioChanged, ElementName=Datagrid_PathList}" CommandParameter="{Binding }" />
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </Controls:NumericUpDown>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!--검증-->
+                        <DataGridTemplateColumn Header="{Binding DataColumn_Validation}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="auto" />
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Text="{Binding ValidationPercent, StringFormat={}{0:F1} %}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        <TextBox Grid.Column="0" Grid.Row="1" IsReadOnly="True" Text="{Binding ValidationImageCount}" />
+                                        <Controls:NumericUpDown Grid.Column="1" Grid.Row="1" Value="{Binding ValidationRatio, UpdateSourceTrigger=PropertyChanged}" Interval="0.1" StringFormat="F1" Minimum="0"  >
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="ValueChanged">
+                                                    <cmd:InvokeCommandAction Command="{Binding DataContext.CommandRatioChanged, ElementName=Datagrid_PathList}" CommandParameter="{Binding }" />
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </Controls:NumericUpDown>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!--테스트-->
+                        <DataGridTemplateColumn Header="{Binding DataColumn_Test}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="auto" />
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Text="{Binding TestPercent, StringFormat={}{0:F1} %}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        <TextBox Grid.Column="0" Grid.Row="1" IsReadOnly="True" Text="{Binding TestImageCount}" />
+                                        <Controls:NumericUpDown Grid.Column="1" Grid.Row="1" Value="{Binding TestRatio, UpdateSourceTrigger=PropertyChanged}" Interval="0.1" StringFormat="F1" Minimum="0"  >
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="ValueChanged">
+                                                    <cmd:InvokeCommandAction Command="{Binding DataContext.CommandRatioChanged, ElementName=Datagrid_PathList}" CommandParameter="{Binding }" />
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </Controls:NumericUpDown>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!--유형-->
+                        <DataGridTemplateColumn Header="{Binding DataColumn_SubClassType}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding PathString.SubClassName, UpdateSourceTrigger=PropertyChanged}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!--삭제-->
+                        <DataGridTemplateColumn >
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Command="{Binding DataContext.CommandRemovePathList, ElementName=Datagrid_PathList}" CommandParameter="{Binding }" ToolTip="선택한 폴더를 목록에서 제거합니다" >
+                                        <iconPacks:PackIconOcticons Kind="X" />
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+
+            <Grid Grid.Row="2">
+                <GroupBox Header="Save Settings">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <Grid Grid.Column="0" Margin="5">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5">
+                                <Run Text="{Binding DataColumn_TotalImageCount, StringFormat={}{0:0} : }" />
+                                <Run Text="{Binding TotalImageCount}" />
+                                <Run Text="&#10;" />
+                                <Run Text="{Binding DataColumn_Train, StringFormat={}{0:0} : }" />
+                                <Run Text="{Binding TotalTrainCount}" />
+                                <Run Text="&#10;" />
+                                <Run Text="{Binding DataColumn_Validation, StringFormat={}{0:0} : }" />
+                                <Run Text="{Binding TotalValCount}" />
+                                <Run Text="&#10;" />
+                                <Run Text="{Binding DataColumn_Test, StringFormat={}{0:0} : }" />
+                                <Run Text="{Binding TotalTestCount}" />
+                                </TextBlock>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Grid.Column="1" Margin="5">
+                            <Button Content="{Binding Setting_SetAllRatio}" Command="{Binding CommandApplyAllRatio}" ToolTip="모든 항목에 Ratio를 일괄 설정 합니다" />
+                        </Grid>
+
+                        <!--<Grid Grid.Column="2" Margin="5">
+                            <Button Content="저장폴더명 일괄 설정" Command="{Binding CommandSetAllFolderName}" ToolTip="모든 항목의 저장폴더명을 일괄 설정 합니다" />
+                        </Grid>-->
+
+                        <Grid Grid.Column="3" Margin="5">
+                            <CheckBox Content="{Binding Setting_SetRandomDistribute}" IsChecked="{Binding IsCheckedRandomDistribute}" Margin="5" ToolTip="사용 : 파일명 순서와 관계없이 Random으로 분배합니다.&#10;미사용 : Train/Val/Test 순서대로 1개씩 분배를 합니다."/>
+                        </Grid>
+
+                    </Grid>
+                </GroupBox>
+            </Grid>
+
+            <Grid Grid.Row="3">
+                <Button Width="50" Height="50" Margin="0,0,10,0" Style="{StaticResource AccentCircleButtonStyle}" Command="{Binding CommandSaveFiles}" ToolTip="위 목록의 셋팅대로 선택하는 폴더에 저장합니다" >
+                    <iconPacks:PackIconEntypo Width="35" Height="35" Kind="Save" />
+                </Button>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>
